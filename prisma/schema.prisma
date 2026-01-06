@@ -27,7 +27,7 @@ model Account {
   id_token          String?
   session_state     String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -37,7 +37,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -48,8 +48,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Post          Post[]
-  Comment       Comment[]
+  posts         Post[]    @relation("UserPosts")
+  comments      Comment[] @relation("UserComments")
 }
 
 model VerificationToken {
@@ -76,10 +76,10 @@ model Post {
   desc      String
   img       String?
   views     Int       @default(0)
-  catSlug   String
-  cat       Category  @relation(fields: [catSlug], references: [slug])
-  userEmail String
-  user      User      @relation(fields: [userEmail], references: [email])
+  catSlug   String?
+  cat       Category? @relation(fields: [catSlug], references: [slug], onDelete: SetNull)
+  userEmail String?
+  user      User?     @relation("UserPosts", fields: [userEmail], references: [email], onDelete: SetNull)
   comments  Comment[]
 }
 
@@ -87,8 +87,8 @@ model Comment {
   id        String   @id @default(cuid()) @map("_id")
   createdAt DateTime @default(now())
   desc      String
-  userEmail String
-  user      User     @relation(fields: [userEmail], references: [email])
-  postSlug  String
-  post      Post     @relation(fields: [postSlug], references: [slug])
+  userEmail String?
+  user      User?    @relation("UserComments", fields: [userEmail], references: [email])
+  postSlug  String?
+  post      Post?    @relation(fields: [postSlug], references: [slug])
 }

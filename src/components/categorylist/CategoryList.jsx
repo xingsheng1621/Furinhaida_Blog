@@ -3,7 +3,6 @@ import styles from './CategoryList.module.css';
 import Link from "next/link";
 import Image from "next/image";
 
-
 const getData = async () => {
     const res = await fetch("http://localhost:3000/api/categories", {
         cache: "no-store",
@@ -25,7 +24,7 @@ const CategoryList = async () => {
         <div className={styles.categries}>
             {data?.map(item=>(
                 <Link 
-                    href="/blog?cat=style" 
+                    href={`/blog?cat=${item.title}`} 
                     className={`${styles.categrie} ${styles[item.slug]}`}
                     key={item._id}
                 >
