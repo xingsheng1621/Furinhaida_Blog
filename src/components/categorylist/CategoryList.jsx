@@ -1,3 +1,4 @@
+import React from "react";
 import styles from './CategoryList.module.css';
 import Link from "next/link";
 import Image from "next/image";
@@ -8,7 +9,7 @@ const getData = async () => {
         cache: "no-store",
     });
     if(!res.ok){
-        throw  new Error("Failed");
+        throw new Error("Failed");
     }
 
     return res.json()
