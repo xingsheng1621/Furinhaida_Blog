@@ -1,4 +1,4 @@
-import styles from './MenuCategories.module.css';
+import styles from './menucategories.module.css';
 import Link from "next/link";
 
 const MenuCategories = () => {

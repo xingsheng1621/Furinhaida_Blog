@@ -2,9 +2,9 @@ import styles from './card.module.css';
 import Image from "next/image";
 import Link from "next/link";
 
-const Card = () => {
+const Card = ({key,item}) => {
     return (
-        <div className={styles.container}>
+        <div className={styles.container} key={key}>
                 <div className={styles.imgContainer}>
                     <Image src="/p1.jpeg" alt="" fill className={styles.image}/>
                 </div>
@@ -14,7 +14,7 @@ const Card = () => {
                         <span className={styles.category}>CULTURE</span>
                     </div>
                 <Link href="/" />
-                <h1 className={styles.title}>这是一段博客文章的标题</h1>
+                <h1 className={styles.title}>{item.title}</h1>
                 <p className={styles.desc}>
                     这是一段博客文章的简短描述，用于吸引读者点击阅读全文。这是一段博客文章的简短描述，用于吸引读者点击阅读全文。
                     这是一段博客文章的简短描述，用于吸引读者点击阅读全文。这是一段博客文章的简短描述，用于吸引读者点击阅读全文。

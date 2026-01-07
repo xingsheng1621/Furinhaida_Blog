@@ -1,4 +1,4 @@
-import styles from './Menu.module.css';
+import styles from './menu.module.css';
 import Link from "next/link";
 import Image from "next/image";
 import MenuPosts from '../menuposts/MenuPosts';
