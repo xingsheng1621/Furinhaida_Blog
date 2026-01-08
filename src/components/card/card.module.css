@@ -39,6 +39,10 @@
     padding: 2px  0px;
 }
 
+.title{
+    cursor: pointer;
+}
+
 @media screen and (max-width: 1280px) {
     .imgContainer{
         display: none;
