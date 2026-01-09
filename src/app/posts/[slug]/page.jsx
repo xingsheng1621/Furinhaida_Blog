@@ -3,7 +3,23 @@ import styles from './singlePage.module.css'
 import Menu from '@/components/Menu/Menu'
 import Image from 'next/image'
 
-const SinglePage = () => {
+const getData = async ({ slug }) => {
+    const res = await fetch(`http://localhost:3000/api/posts/${slug}`, {
+        cache: "no-store",
+    });
+    if(!res.ok){
+        throw new Error("Failed");
+    }   
+
+    return res.json()
+};
+
+const SinglePage = async ({ params }) => {
+
+
+  const {slug} = params;
+  const data = await getData(params);
+
   return (
     <div className={styles.container}>
         <div className={styles.infoContainer}>
