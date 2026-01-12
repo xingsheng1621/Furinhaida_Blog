@@ -63,15 +63,15 @@ export const POST = async (req) => {
     }
     
     const commentData = { ...body, postSlug, userEmail: session.user.email };
-    console.log('Creating comment with:', commentData);
+    // console.log('Creating comment with:', commentData);
     const comment = await prisma.comment.create({
       data: commentData,
       include: { user: true }
     });
-    console.log('Comment created successfully:', comment);
+    // console.log('Comment created successfully:', comment);
     return new NextResponse(JSON.stringify(comment), { status: 200 });
   } catch (err) {
-    console.log('POST comment error:', err);
+    // console.log('POST comment error:', err);
     return new NextResponse(
       JSON.stringify({ message: err.message || "Something went wrong!" }),
       { status: 500 }

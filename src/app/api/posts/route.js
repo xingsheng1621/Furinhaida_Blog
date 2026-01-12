@@ -34,3 +34,46 @@ export const GET = async (req) => {
     );
   }
 };
+
+
+// CREATE A POST
+export const POST = async (req) => {
+
+  const session = await getAuthSession();
+  if (!session){
+    return new NextResponse(
+      JSON.stringify({ message: "Not Authenticated" }),
+      { status: 401 }
+    );
+  }
+
+  try {
+    const body = await req.json();
+    
+    // 解码 postSlug，确保存储的是中文形式
+    let postSlug = body.postSlug;
+    if (postSlug) {
+      try {
+        postSlug = decodeURIComponent(postSlug);
+      } catch (e) {
+        console.warn('Failed to decode postSlug:', e);
+      }
+    }
+    
+    const postData = { ...body, postSlug, userEmail: session.user.email };
+    // console.log('Creating post with:', postData);
+    const post = await prisma.post.create({
+      data: postData,
+      include: { user: true }
+    });
+    // console.log('Post created successfully:', post);
+    return new NextResponse(JSON.stringify(post), { status: 200 });
+  } catch (err) {
+    // console.log('POST post error:', err);
+    return new NextResponse(
+      JSON.stringify({ message: err.message || "Something went wrong!" }),
+      { status: 500 }
+    );
+  }
+};
+
