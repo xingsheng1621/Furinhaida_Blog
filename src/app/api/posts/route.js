@@ -1,5 +1,6 @@
 import prisma from "@/utils/connect";
 import { NextResponse } from "next/server";
+import { getAuthSession } from "@/utils/auth";
 
 export const GET = async (req) => {
 
@@ -38,9 +39,8 @@ export const GET = async (req) => {
 
 // CREATE A POST
 export const POST = async (req) => {
-
   const session = await getAuthSession();
-  if (!session){
+  if (!session) {
     return new NextResponse(
       JSON.stringify({ message: "Not Authenticated" }),
       { status: 401 }
@@ -49,27 +49,25 @@ export const POST = async (req) => {
 
   try {
     const body = await req.json();
-    
-    // 解码 postSlug，确保存储的是中文形式
-    let postSlug = body.postSlug;
-    if (postSlug) {
+
+    let slug = body.slug;
+    if (slug) {
       try {
-        postSlug = decodeURIComponent(postSlug);
+        slug = decodeURIComponent(slug);
       } catch (e) {
-        console.warn('Failed to decode postSlug:', e);
+        console.warn("Failed to decode slug:", e);
       }
     }
-    
-    const postData = { ...body, postSlug, userEmail: session.user.email };
-    // console.log('Creating post with:', postData);
+
+    const postData = { ...body, slug, userEmail: session.user.email };
+
     const post = await prisma.post.create({
       data: postData,
-      include: { user: true }
+      include: { user: true },
     });
-    // console.log('Post created successfully:', post);
+
     return new NextResponse(JSON.stringify(post), { status: 200 });
   } catch (err) {
-    // console.log('POST post error:', err);
     return new NextResponse(
       JSON.stringify({ message: err.message || "Something went wrong!" }),
       { status: 500 }
