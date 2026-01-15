@@ -69,11 +69,16 @@ const WritePage = () => {
   const handleSubmit = async () => {
     setUploadError("");
 
+    // 从HTML内容中提取纯文本作为desc
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = value;
+    const plainTextDesc = tempDiv.textContent || tempDiv.innerText || '';
+
     const res = await fetch("/api/posts", {
       method: "POST",
       body: JSON.stringify({
         title,
-        desc: value,
+        desc: plainTextDesc.substring(0, 200), // 限制desc长度并使用纯文本
         img: media,
         slug: slugify(title),
         catSlug: catSlug || "style", //If not selected, choose the general category
