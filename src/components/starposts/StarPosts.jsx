@@ -1,15 +1,18 @@
-import styles from './menuposts.module.css';
+import styles from './starposts.module.css';
 import Link from "next/link";
 import Image from "next/image";
 import prisma from "@/utils/connect";
 
 const getData = async () => {
     try {
-        // 获取浏览量最高的前5篇文章
+        // 获取标记为推荐的文章，最多5篇
         const posts = await prisma.post.findMany({
+            where: {
+                featured: true
+            },
             take: 5,
             orderBy: {
-                views: 'desc'
+                createdAt: 'desc'
             },
             include: {
                 user: true,
@@ -22,7 +25,7 @@ const getData = async () => {
     }
 };
 
-const MenuPosts = async ({withImage}) => {
+const StarPosts = async ({withImage}) => {
     const { posts } = await getData();
 
     return (
@@ -54,4 +57,4 @@ const MenuPosts = async ({withImage}) => {
     )
 }
 
-export default MenuPosts
+export default StarPosts

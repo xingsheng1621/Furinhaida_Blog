@@ -71,7 +71,7 @@ const WritePage = () => {
 
     // 从HTML内容中提取纯文本作为desc
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = value;
+    tempDiv.innerHTML = value;<div className=""></div>
     const plainTextDesc = tempDiv.textContent || tempDiv.innerText || '';
 
     const res = await fetch("/api/posts", {

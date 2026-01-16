@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import MenuPosts from '../menuposts/MenuPosts';
 import MenuCategories from '../menucategories/MenuCategories';
+import StarPosts from '../starposts/StarPosts';
 
 const Menu = () => {
     return (
@@ -17,7 +18,7 @@ const Menu = () => {
 
         <h2 className={styles.subtitle}>Chosen by the editor</h2>
         <h1 className={styles.title}>推荐文章</h1>
-        <MenuPosts withImage={true}/>
+        <StarPosts withImage={true}/>
 
     </div>
     )

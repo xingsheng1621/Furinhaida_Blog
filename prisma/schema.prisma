@@ -76,6 +76,7 @@ model Post {
   desc      String
   img       String?
   views     Int       @default(0)
+  featured  Boolean   @default(false)
   catSlug   String?
   cat       Category? @relation(fields: [catSlug], references: [slug], onDelete: SetNull)
   userEmail String?
