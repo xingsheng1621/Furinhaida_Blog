@@ -1,0 +1,151 @@
+.container {
+  min-height: calc(100vh - 200px);
+  padding: 40px 20px;
+}
+
+.wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: var(--bg);
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  color: var(--textColor);
+}
+
+.section {
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--softBg);
+}
+
+.section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--textColor);
+}
+
+.avatarSection {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.avatarWrapper {
+  flex-shrink: 0;
+}
+
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--softBg);
+}
+
+.avatarActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.uploadButton {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--softTextColor);
+  color: var(--bg);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.uploadButton:hover {
+  background-color: var(--textColor);
+  transform: translateY(-1px);
+}
+
+.uploadButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hint {
+  font-size: 14px;
+  color: var(--softTextColor);
+  margin: 0;
+}
+
+.infoItem {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--softTextColor);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.value {
+  padding: 12px 16px;
+  background-color: var(--softBg);
+  border-radius: 6px;
+  color: var(--textColor);
+}
+
+.success {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background-color: #d4edda;
+  color: #155724;
+  border-radius: 6px;
+  border: 1px solid #c3e6cb;
+}
+
+.error {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border-radius: 6px;
+  border: 1px solid #f5c6cb;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  font-size: 20px;
+  color: var(--softTextColor);
+}
+
+@media screen and (max-width: 768px) {
+  .wrapper {
+    padding: 20px;
+  }
+
+  .avatarSection {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+}
