@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import styles from "./writePage.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "react-quill/dist/quill.bubble.css";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -14,11 +14,35 @@ const WritePage = () => {
 
   const [open, setOpen] = useState(false);
   const [media, setMedia] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
   const [catSlug, setCatSlug] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
+  const [uploadSuccess, setUploadSuccess] = useState("");
+  const [mediaPreview, setMediaPreview] = useState("");
+  const [showVideoInput, setShowVideoInput] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        if (res.ok) {
+          const data = await res.json();
+          setCategories(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   if (status === "loading") {
     return <div className={styles.loading}>Loading...</div>;
@@ -72,6 +96,7 @@ const WritePage = () => {
     if (!selectedFile) return;
 
     setUploadError("");
+    setUploadSuccess("");
     setUploading(true);
 
     const formData = new FormData();
@@ -89,6 +114,14 @@ const WritePage = () => {
 
       const data = await res.json();
       setMedia(data.url || "");
+      setMediaPreview(data.url || "");
+      
+      // 显示上传完成提醒
+      const fileType = selectedFile.type.startsWith('video') ? '视频' : '图片';
+      setUploadSuccess(`${fileType}上传成功！`);
+      
+      // 3秒后自动清除提醒
+      setTimeout(() => setUploadSuccess(""), 3000);
     } catch (err) {
       console.error("Upload error", err);
       setUploadError("上传文件失败，请重试。");
@@ -114,10 +147,17 @@ const WritePage = () => {
       return;
     }
 
-    // 从HTML内容中提取纯文本作为desc
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = value;
-    const plainTextDesc = tempDiv.textContent || tempDiv.innerText || '';
+    // 从HTML内容中提取纯文本作为desc，保留段落结构
+    let plainTextDesc = value
+      .replace(/<p>/g, '')
+      .replace(/<\/p>/g, '\n\n')
+      .replace(/<br\s*\/?>/g, '\n')
+      .replace(/<[^>]*>/g, '')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&')
+      .trim();
 
     if (!plainTextDesc.trim()) {
       setUploadError("内容不能为空");
@@ -129,7 +169,8 @@ const WritePage = () => {
         method: "POST",
         body: JSON.stringify({
           title,
-          desc: plainTextDesc.substring(0, 200), // 限制desc长度并使用纯文本
+          desc: plainTextDesc.substring(0, 200), // 摘要保留纯文本但保留换行
+          content: value, // 完整的HTML内容
           img: media,
           slug,
           catSlug: catSlug || "style", //If not selected, choose the general category
@@ -157,13 +198,13 @@ const WritePage = () => {
         className={styles.input}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <select className={styles.select} onChange={(e) => setCatSlug(e.target.value)}>
-        <option value="style">style</option>
-        <option value="fashion">fashion</option>
-        <option value="food">food</option>
-        <option value="culture">culture</option>
-        <option value="travel">travel</option>
-        <option value="coding">coding</option>
+      <select className={styles.select} onChange={(e) => setCatSlug(e.target.value)} defaultValue="" disabled={categoriesLoading}>
+        <option value="">{categoriesLoading ? "加载分类中..." : "选择文章分类..."}</option>
+        {categories.map((cat) => (
+          <option key={cat.id} value={cat.slug}>
+            {cat.title}
+          </option>
+        ))}
       </select>
       <div className={styles.editor}>
         <button className={styles.button} onClick={() => setOpen(!open)}>
@@ -174,20 +215,91 @@ const WritePage = () => {
             <input
               type="file"
               id="image"
+              accept="image/*"
               onChange={handleFileChange}
               style={{ display: "none" }}
             />
             <button className={styles.addButton}>
-              <label htmlFor="image">
+              <label htmlFor="image" title="上传图片">
                 <Image src="/image.png" alt="" width={16} height={16} />
               </label>
             </button>
-            <button className={styles.addButton}>
-              <Image src="/external.png" alt="" width={16} height={16} />
-            </button>
-            <button className={styles.addButton}>
+            <button className={styles.addButton} onClick={() => setShowVideoInput(!showVideoInput)} title="添加视频外链">
               <Image src="/video.png" alt="" width={16} height={16} />
             </button>
+          </div>
+        )}
+        {showVideoInput && (
+          <div className={styles.videoInput}>
+            <input
+              type="text"
+              placeholder="输入视频URL (如: https://...)"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              className={styles.urlInput}
+            />
+            <button 
+              className={styles.confirmBtn}
+              onClick={() => {
+                if (videoUrl.trim()) {
+                  setMediaPreview(videoUrl);
+                  setShowVideoInput(false);
+                  setUploadSuccess("视频链接已添加！");
+                  setTimeout(() => setUploadSuccess(""), 3000);
+                }
+              }}
+            >
+              确认
+            </button>
+            <button 
+              className={styles.cancelBtn}
+              onClick={() => {
+                setShowVideoInput(false);
+                setVideoUrl("");
+              }}
+            >
+              取消
+            </button>
+          </div>
+        )}
+        {mediaPreview && (
+          <div className={styles.mediaPreview}>
+            {mediaPreview.includes('http') || mediaPreview.endsWith('.mp4') || mediaPreview.endsWith('.webm') || mediaPreview.endsWith('.mov') ? (
+              <div className={styles.videoPreview}>
+                <video controls width="300">
+                  <source src={mediaPreview} />
+                  您的浏览器不支持视频标签
+                </video>
+                <button 
+                  className={styles.removeBtn}
+                  onClick={() => {
+                    setMediaPreview("");
+                    setVideoUrl("");
+                  }}
+                >
+                  ✕ 删除
+                </button>
+              </div>
+            ) : (
+              <div className={styles.imagePreview}>
+                <Image 
+                  src={mediaPreview} 
+                  alt="preview" 
+                  width={300} 
+                  height={200}
+                  style={{ objectFit: 'cover', borderRadius: '8px' }}
+                />
+                <button 
+                  className={styles.removeBtn}
+                  onClick={() => {
+                    setMediaPreview("");
+                    setMedia("");
+                  }}
+                >
+                  ✕ 删除
+                </button>
+              </div>
+            )}
           </div>
         )}
         <ReactQuill
@@ -202,6 +314,7 @@ const WritePage = () => {
         {uploading ? "Uploading..." : "Publish"}
       </button>
       {uploadError && <p className={styles.error}>{uploadError}</p>}
+      {uploadSuccess && <p className={styles.success}>{uploadSuccess}</p>}
     </div>
   );
 };

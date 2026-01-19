@@ -6,9 +6,40 @@
 
 .select{
   margin-bottom: 50px;
-  padding: 10px 20px;
   margin-left: 50px;
+  padding: 12px 20px;
   width: max-content;
+  font-size: 15px;
+  font-weight: 500;
+  background-color: var(--bg);
+  color: var(--textColor);
+  border: 2px solid #1a8917;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231a8917' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 40px;
+}
+
+.select:hover {
+  border-color: #158c12;
+  box-shadow: 0 2px 8px rgba(26, 137, 23, 0.2);
+  transform: translateY(-2px);
+}
+
+.select:focus {
+  outline: none;
+  border-color: #158c12;
+  box-shadow: 0 0 0 3px rgba(26, 137, 23, 0.1);
+}
+
+.select option {
+  padding: 8px 20px;
+  background-color: var(--bg);
+  color: var(--textColor);
 }
 
 .editor {
@@ -45,6 +76,61 @@
   left: 50px;
 }
 
+.videoInput {
+  display: flex;
+  gap: 10px;
+  background-color: var(--soft);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.urlInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: var(--bg);
+  color: var(--textColor);
+}
+
+.urlInput:focus {
+  outline: none;
+  border-color: #1a8917;
+}
+
+.confirmBtn {
+  padding: 8px 16px;
+  background-color: #1a8917;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.confirmBtn:hover {
+  background-color: #158c12;
+}
+
+.cancelBtn {
+  padding: 8px 16px;
+  background-color: #ccc;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.cancelBtn:hover {
+  background-color: #bbb;
+}
+
 .input{
   padding: 50px;
   font-size: 64px;
@@ -72,4 +158,69 @@
   color: white;
   cursor: pointer;
   border-radius: 20px;
+}
+
+.mediaPreview {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: var(--soft);
+  border-radius: 8px;
+}
+
+.imagePreview,
+.videoPreview {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.removeBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px 12px;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.removeBtn:hover {
+  background-color: rgba(255, 0, 0, 1);
+}
+
+.error,
+.success {
+  padding: 12px 15px;
+  border-radius: 4px;
+  margin-top: 15px;
+  font-size: 14px;
+  animation: slideIn 0.3s ease;
+}
+
+.error {
+  background-color: #ffe0e0;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+}
+
+.success {
+  background-color: #e8f5e9;
+  color: #388e3c;
+  border: 1px solid #388e3c;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

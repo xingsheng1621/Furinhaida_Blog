@@ -20,6 +20,15 @@ const SinglePage = async ({ params }) => {
 
   const data = await getData( slug );
 
+  // 格式化日期为本地时间
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
+  };
+
   return (
     <div className={styles.container}>
         <div className={styles.infoContainer}>
@@ -33,7 +42,7 @@ const SinglePage = async ({ params }) => {
               </div>)}
               <div className={styles.userTextcontainer}>
                 <span className={styles.username}>{data?.user.name}</span>
-                <span className={styles.date}>2025.12.17</span>
+                <span className={styles.date}>{formatDate(data?.createdAt)}</span>
               </div>
             </div>
           </div>
@@ -43,7 +52,7 @@ const SinglePage = async ({ params }) => {
         </div>
         <div className={styles.content}>
           <div className={styles.post}>
-            <div className={styles.description} dangerouslySetInnerHTML={{__html: data?.desc || ""}} />
+            <div className={styles.description} dangerouslySetInnerHTML={{__html: data?.content || data?.desc || ""}} />
             <div className={styles.comments}>
               <Comments postSlug={slug}/>
             </div>
