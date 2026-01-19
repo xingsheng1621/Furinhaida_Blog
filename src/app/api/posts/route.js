@@ -50,6 +50,21 @@ export const POST = async (req) => {
   try {
     const body = await req.json();
 
+    // 验证必需字段
+    if (!body.title || !body.title.trim()) {
+      return new NextResponse(
+        JSON.stringify({ message: "标题不能为空" }),
+        { status: 400 }
+      );
+    }
+
+    if (!body.slug || !body.slug.trim()) {
+      return new NextResponse(
+        JSON.stringify({ message: "无法生成有效的slug" }),
+        { status: 400 }
+      );
+    }
+
     let slug = body.slug;
     if (slug) {
       try {
@@ -68,6 +83,19 @@ export const POST = async (req) => {
 
     return new NextResponse(JSON.stringify(post), { status: 200 });
   } catch (err) {
+    console.error("Error creating post:", err);
+    
+    // 处理Prisma唯一约束错误
+    if (err.code === 'P2002') {
+      const field = err.meta?.target?.[0];
+      if (field === 'slug') {
+        return new NextResponse(
+          JSON.stringify({ message: "此标题已存在，请更改标题" }),
+          { status: 400 }
+        );
+      }
+    }
+
     return new NextResponse(
       JSON.stringify({ message: err.message || "Something went wrong!" }),
       { status: 500 }
