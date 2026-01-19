@@ -10,13 +10,16 @@ export const GET = async (req) => {
   const cat = searchParams.get("cat");
 
 
-  const POST_PER_PAGE = 2;
+  const POST_PER_PAGE = 4;
 
   const query = {
       skip: POST_PER_PAGE * (page - 1),
       take: POST_PER_PAGE,
       where:{
         ...(cat && {catSlug: cat }),
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
   }
 

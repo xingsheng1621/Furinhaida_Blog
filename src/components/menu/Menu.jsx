@@ -4,10 +4,13 @@ import Image from "next/image";
 import MenuPosts from '../menuposts/MenuPosts';
 import MenuCategories from '../menucategories/MenuCategories';
 import StarPosts from '../starposts/StarPosts';
+import Search from '../search/Search';
 
 const Menu = () => {
     return (
     <div className={styles.container}>
+        <Search />
+
         <h2 className={styles.subtitle}>"What's hot?"</h2>
         <h1 className={styles.title}>热点内容</h1>
         <MenuPosts withImage={false}/>

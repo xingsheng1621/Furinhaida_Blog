@@ -11,6 +11,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
     "@prisma/client": "6.19",
+    "bcryptjs": "^3.0.3",
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
     "firebase": "^12.7.0",

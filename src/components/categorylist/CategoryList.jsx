@@ -20,7 +20,7 @@ const CategoryList = async () => {
 
     return (
     <div className={styles.container}>
-        <h1 className={styles.title}>核心文章</h1>
+        <h1 className={styles.title}>文章分区</h1>
         <div className={styles.categries}>
             {data?.map(item=>(
                 <Link 
